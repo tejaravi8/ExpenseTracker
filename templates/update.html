@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="fw-bold mb-4">Update Expense</h3>
+
+<div class="card premium-card p-4 mb-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold mb-0">Edit Expense</h5>
+        <span class="badge bg-warning text-dark px-3 py-2">Editing #{{ expense.id }}</span>
+    </div>
+
+    <form action="/expenses/update/{{ expense.id }}" method="post">
+        <div class="row g-3">
+
+            <div class="col-md-4">
+                <label class="form-label">Amount</label>
+                <input type="number" step="0.01" name="amount"
+                       value="{{ expense.amount }}" class="form-control modern-input" required>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Category</label>
+                <select name="category" class="form-select modern-input" required>
+                    <option value="Food" {% if expense.category=='Food' %}selected{% endif %}>Food</option>
+                    <option value="Travel" {% if expense.category=='Travel' %}selected{% endif %}>Travel</option>
+                    <option value="Shopping" {% if expense.category=='Shopping' %}selected{% endif %}>Shopping</option>
+                    <option value="Bills" {% if expense.category=='Bills' %}selected{% endif %}>Bills</option>
+                    <option value="Other" {% if expense.category=='Other' %}selected{% endif %}>Other</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Date</label>
+                <input type="date" name="date"
+                       value="{{ expense.date }}" class="form-control modern-input" required>
+            </div>
+
+            <div class="col-md-12">
+                <label class="form-label">Description</label>
+                <input type="text" name="description"
+                       value="{{ expense.description }}" class="form-control modern-input">
+            </div>
+
+            <div class="col-md-12 text-end">
+                <button class="btn btn-success premium-btn px-4">Save Changes ✔</button>
+            </div>
+
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="fw-bold mb-4">Manage Expenses</h3>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="fw-bold mb-0">All Expenses</h5>
+
+    <div>
+        <a href="/expenses/export/csv" class="btn btn-outline-secondary btn-sm me-2">CSV</a>
+        <a href="/expenses/export/excel" class="btn btn-outline-success btn-sm me-2">Excel</a>
+        <a href="/expenses/export/pdf" class="btn btn-outline-danger btn-sm">PDF</a>
+    </div>
+</div>
+
+<!-- Add Expense -->
+<div class="card premium-card p-4 mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold mb-0">Add Expense</h5>
+        <span class="badge bg-primary px-3 py-2">Quick Add</span>
+    </div>
+
+    <form action="/expenses/add" method="post">
+        <div class="row g-3">
+
+            <div class="col-md-4">
+                <label class="form-label">Amount</label>
+                <input type="number" step="0.01" name="amount" class="form-control modern-input" required>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Category</label>
+                <select name="category" class="form-select modern-input" required>
+                    <option value="">Select Category</option>
+                    <option>Food</option>
+                    <option>Travel</option>
+                    <option>Shopping</option>
+                    <option>Bills</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Date</label>
+                <input type="date" name="date" class="form-control modern-input" required>
+            </div>
+
+            <div class="col-md-12">
+                <label class="form-label">Description</label>
+                <input type="text" name="description" class="form-control modern-input" placeholder="Short note (optional)">
+            </div>
+
+            <div class="col-md-12 text-end">
+                <button class="btn btn-primary premium-btn px-4">+ Add Expense</button>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<!-- Main Expenses Table -->
+<div class="card premium-card p-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold mb-0">All Expenses</h5>
+        <button class="btn btn-outline-primary btn-sm premium-btn-sm"
+                data-bs-toggle="collapse" data-bs-target="#filterPanel">
+            🔍 Filters
+        </button>
+    </div>
+
+    <!-- Filters -->
+    <div class="collapse" id="filterPanel">
+        <form method="get" action="/expenses" class="row g-3 mb-3 premium-filter-area">
+
+            <div class="col-md-3">
+                <input type="text" name="q" placeholder="Search description" class="form-control modern-input">
+            </div>
+
+            <div class="col-md-2">
+                <select name="category" class="form-select modern-input">
+                    <option value="">All Categories</option>
+                    <option>Food</option>
+                    <option>Travel</option>
+                    <option>Shopping</option>
+                    <option>Bills</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <input type="date" name="date" class="form-control modern-input">
+            </div>
+
+            <div class="col-md-2">
+                <input type="number" name="min" class="form-control modern-input" placeholder="Min">
+            </div>
+
+            <div class="col-md-2">
+                <input type="number" name="max" class="form-control modern-input" placeholder="Max">
+            </div>
+
+            <div class="col-md-1 d-grid">
+                <button class="btn btn-secondary premium-btn-sm">Apply</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Table -->
+    <div class="table-responsive">
+        <table class="table premium-table">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Amount</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for exp in expenses %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>₹{{ exp.amount }}</td>
+                    <td>{{ exp.category }}</td>
+                    <td>{{ exp.date }}</td>
+                    <td>{{ exp.description }}</td>
+
+                    <td class="text-center">
+                        <a href="/expenses/update/{{ exp.id }}" class="btn btn-warning premium-edit-btn btn-sm">Edit</a>
+
+                        <a href="/expenses/delete/{{ exp.id }}"
+                           class="btn btn-danger premium-delete-btn btn-sm"
+                           onclick="return confirm('Are you sure you want to delete?')">
+                           Delete
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

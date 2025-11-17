@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="auth-container d-flex justify-content-center align-items-center">
+
+  <div class="auth-card premium-auth-card p-4">
+
+      <div class="text-center mb-3">
+          <div class="logo-box-big mb-2">Ex</div>
+          <h4 class="fw-bold">Create Account</h4>
+          <p class="text-muted small">Join Expense Tracker</p>
+      </div>
+
+      {% if error %}
+      <div class="alert alert-danger py-2 text-center">{{ error }}</div>
+      {% endif %}
+
+      <form method="post" action="/register">
+
+          <label class="form-label mt-2">Username</label>
+          <input type="text" class="form-control modern-input" name="username" required>
+
+          <label class="form-label mt-3">Email</label>
+          <input type="email" class="form-control modern-input" name="email" required>
+
+          <label class="form-label mt-3">Password</label>
+          <input type="password" class="form-control modern-input" name="password" required>
+
+          <button class="btn btn-primary w-100 mt-4 premium-btn">Create Account</button>
+      </form>
+
+      <p class="mt-3 text-center small text-muted">
+          Already have an account?
+          <a href="/login" class="text-primary fw-semibold">Login</a>
+      </p>
+
+  </div>
+
+</div>
+
+{% endblock %}

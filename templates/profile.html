@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="fw-bold mb-4">Profile</h3>
+
+<div class="row g-4">
+
+  <!-- User Info -->
+  <div class="col-md-4">
+    <div class="card premium-card p-4 text-center">
+      <div class="logo-box mx-auto mb-3" style="font-size:30px;width:70px;height:70px;">
+        {{ user.username[0] | upper }}
+      </div>
+      <h5 class="fw-bold">{{ user.username }}</h5>
+      <p class="text-muted">{{ user.email }}</p>
+    </div>
+  </div>
+
+  <!-- Monthly Budget -->
+  <div class="col-md-8">
+    <div class="card premium-card p-4">
+      <h5 class="fw-bold">Monthly Budget</h5>
+
+      <form method="post" action="/update-budget" class="row g-3 mt-2">
+        <div class="col-md-6">
+          <input type="number" name="amount" value="{{ budget }}" class="form-control modern-input" required>
+        </div>
+
+        <div class="col-md-3 d-grid">
+          <button class="btn btn-primary premium-btn-sm">Update</button>
+        </div>
+      </form>
+
+      <small class="text-muted mt-2 d-block">
+        Used: ₹{{ cur_month_spent }} — Remaining: ₹{{ budget_remaining }}
+      </small>
+
+      <div class="progress mt-3" style="height:12px;">
+        <div class="progress-bar bg-primary" style="width: {{ progress_pct }}%;"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Category Limits -->
+<div class="card premium-card p-4 mt-4">
+  <h5 class="fw-bold mb-3">Category Limits</h5>
+
+  {% for cat, val in limits.items() %}
+  <form method="post" action="/profile/update-limit" class="row g-3 align-items-center mb-2">
+
+    <div class="col-md-3 fw-semibold">{{ cat }}</div>
+
+    <div class="col-md-4">
+      <input type="number" name="limit_amount" value="{{ val }}" class="form-control modern-input">
+    </div>
+
+    <input type="hidden" name="category" value="{{ cat }}">
+
+    <div class="col-md-2 d-grid">
+      <button class="btn btn-dark premium-btn-sm">Save</button>
+    </div>
+
+  </form>
+  {% endfor %}
+</div>
+
+{% endblock %}

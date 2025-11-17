@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="fw-bold mb-4">Dashboard</h3>
+
+<!-- ===============================
+     LIMIT ALERTS
+================================= -->
+{% if limit_warnings %}
+  {% for warn in limit_warnings %}
+  <div class="alert alert-danger p-2 mb-2">
+    ⚠ {{ warn }}
+  </div>
+  {% endfor %}
+{% endif %}
+
+<!-- ===============================
+     TOP SUMMARY CARDS
+================================= -->
+<div class="row g-3 mb-4">
+
+  <div class="col-md-3">
+    <div class="card premium-card summary-card p-3 text-center">
+      <small class="text-muted">Total Expenses</small>
+      <div class="h4 mt-2 fw-bold">₹{{ total }}</div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card premium-card summary-card p-3 text-center">
+      <small class="text-muted">Top Category</small>
+      <div class="h5 mt-2 fw-bold">{{ top_category }}</div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card premium-card summary-card p-3 text-center">
+      <small class="text-muted">Total Transactions</small>
+      <div class="h4 mt-2 fw-bold">{{ count }}</div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card premium-card summary-card p-3">
+      <small class="text-muted">Biggest Transaction</small>
+
+      {% if biggest_tx %}
+      <div class="h5 mt-2 fw-bold">₹{{ biggest_tx.amount }}</div>
+      <div class="text-muted">{{ biggest_tx.category }} — {{ biggest_tx.date }}</div>
+      {% else %}
+      <div class="text-muted">No transactions</div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+
+<!-- ===============================
+     FIRST ROW CHARTS
+================================= -->
+<div class="row g-4 mb-4">
+
+  <!-- CATEGORY PIE -->
+  <div class="col-md-6 d-flex">
+    <div class="card premium-card p-4 w-100">
+      <h6 class="fw-bold mb-3">Category Breakdown</h6>
+      <div class="chart-wrapper"><canvas id="pieChart"></canvas></div>
+      <small class="text-muted mt-3 d-block">
+        Top category: <strong>{{ top_category }}</strong>
+      </small>
+    </div>
+  </div>
+
+  <!-- LAST 7 DAYS -->
+  <div class="col-md-6 d-flex">
+    <div class="card premium-card p-4 w-100">
+      <h6 class="fw-bold mb-3">Last 7 Days Spending</h6>
+      <div class="chart-wrapper"><canvas id="last7Chart"></canvas></div>
+
+      <div class="d-flex justify-content-between mt-3 small text-muted">
+        <div>Highest: <strong>{{ highest_day }}</strong></div>
+        <div>₹{{ highest_day_val }}</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===============================
+     SECOND ROW CHARTS
+================================= -->
+<div class="row g-4 mb-4">
+
+  <!-- CATEGORY BAR CHART -->
+  <div class="col-md-6 d-flex">
+    <div class="card premium-card p-4 w-100">
+      <h6 class="fw-bold mb-3">Category Comparison</h6>
+      <div class="chart-wrapper"><canvas id="barChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- MONTHLY TREND -->
+  <div class="col-md-6 d-flex">
+    <div class="card premium-card p-4 w-100">
+      <h6 class="fw-bold mb-3">Monthly Trend (Last 12 Months)</h6>
+      <div class="chart-wrapper"><canvas id="lineChart"></canvas></div>
+
+      <small class="text-muted mt-3 d-block">
+        Avg Daily: ₹{{ avg_daily }} | Change: {{ pct_change }}%
+      </small>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===============================
+     MONTHLY BUDGET CARD
+================================= -->
+<div class="card premium-card p-4 mb-4">
+
+  <div class="d-flex justify-content-between align-items-center">
+    <h6 class="fw-bold">Monthly Budget</h6>
+    <a href="/profile" class="btn btn-outline-primary btn-sm">Edit</a>
+  </div>
+
+  <div class="h5 fw-bold mt-2">₹{{ budget }}</div>
+
+  <div class="progress mt-3" style="height:14px;">
+    <div class="progress-bar bg-primary" style="width: {{ progress_pct }}%;"></div>
+  </div>
+
+  <small class="text-muted mt-2">
+    Spent: ₹{{ cur_month_spent }} — Remaining: ₹{{ budget_remaining }}
+  </small>
+</div>
+
+<!-- ===============================
+     CHART.JS
+================================= -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// Safe JSON fallback to avoid undefined
+const labelsCat = {{ labels_cat | tojson | default("[]") }};
+const valuesCat = {{ values_cat | tojson | default("[]") }};
+const months = {{ months | tojson | default("[]") }};
+const monthValues = {{ month_values | tojson | default("[]") }};
+const last7Labels = {{ last7_labels | tojson | default("[]") }};
+const last7Values = {{ last7_values | tojson | default("[]") }};
+
+const palette = ['#64b5f6','#ff8a80','#ffd54f','#4dd0e1','#b39ddb','#f48fb1'];
+
+/* ===========================
+   PIE CHART
+=========================== */
+new Chart(pieChart, {
+  type: "pie",
+  data: {
+    labels: labelsCat,
+    datasets: [{
+      label: "Categories",
+      data: valuesCat,
+      backgroundColor: palette
+    }]
+  },
+  options: {
+    plugins: { legend: { position: "right" } }
+  }
+});
+
+/* ===========================
+   LAST 7 DAYS (Bar Chart)
+=========================== */
+new Chart(last7Chart, {
+  type: "bar",
+  data: {
+    labels: last7Labels,
+    datasets: [{
+      label: "Daily Spending",
+      data: last7Values,
+      backgroundColor: palette[1]
+    }]
+  }
+});
+
+/* ===========================
+   CATEGORY BAR
+=========================== */
+new Chart(barChart, {
+  type: "bar",
+  data: {
+    labels: labelsCat,
+    datasets: [{
+      label: "Category Spend",
+      data: valuesCat,
+      backgroundColor: palette[0]
+    }]
+  }
+});
+
+/* ===========================
+   MONTHLY TREND (Line Chart)
+=========================== */
+new Chart(lineChart, {
+  type: "line",
+  data: {
+    labels: months,
+    datasets: [{
+      label: "Monthly Total",
+      data: monthValues,
+      borderColor: palette[0],
+      backgroundColor: "rgba(100,149,237,0.2)",
+      tension: 0.35,
+      fill: true
+    }]
+  }
+});
+</script>
+
+{% endblock %}

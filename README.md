@@ -31,8 +31,7 @@ The app helps users track expenses, analyze spending, set budgets, and manage ca
 
 ### 🎨 UI Design
 - Clean & responsive  
-- Premium cards and tables  
-- Dark Mode  
+- Premium cards and tables   
 - Mobile-optimized  
 - Glass-style navbar  
 

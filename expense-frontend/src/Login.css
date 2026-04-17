@@ -1,0 +1,137 @@
+.logout-btn {
+  margin-left: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+/* Full page */
+.login-container {
+  display: flex;
+  height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* LEFT SIDE */
+.login-left {
+  flex: 1;
+  background: #2563eb;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px;
+}
+
+.brand h1 {
+  font-size: 36px;
+  margin: 20px 0 10px;
+}
+
+.brand p {
+  font-size: 16px;
+  opacity: 0.9;
+  max-width: 300px;
+}
+
+/* RIGHT SIDE */
+.login-right {
+  flex: 1;
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-box {
+  width: 350px;
+}
+
+.login-box h2 {
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  color: gray;
+  margin-bottom: 20px;
+}
+
+/* INPUTS */
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  outline: none;
+  font-size: 14px;
+}
+
+/* FORGOT */
+.forgot {
+  text-align: right;
+  color: #2563eb;
+  font-size: 13px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+/* LOGIN BUTTON */
+.login-btn {
+  width: 100%;
+  padding: 12px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.login-btn:hover {
+  background: #1e4ed8;
+}
+
+/* DIVIDER */
+.divider {
+  text-align: center;
+  margin: 15px 0;
+  color: gray;
+  font-size: 14px;
+}
+
+/* GOOGLE BUTTON */
+.google-btn {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+}
+
+/* SIGNUP */
+.signup {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.signup span {
+  color: #2563eb;
+  cursor: pointer;
+}
+
+.login-box input {
+  transition: 0.2s;
+}
+
+.login-box input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
